@@ -1,6 +1,11 @@
 import express from 'express'
+import dotenv from 'dotenv'
+import mongoDb from './database/Database.js'
 
 const app = express()
+
+dotenv.config({ path: './config/.env' })
+mongoDb.connection()
 
 app.use(express.json())
 

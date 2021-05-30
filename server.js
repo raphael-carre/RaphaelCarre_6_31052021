@@ -1,8 +1,5 @@
 import http from 'http'
-import dotenv from 'dotenv'
 import app from './app.js'
-
-dotenv.config({ path: './config/.env' })
 
 const normalizePort = val => {
     const port = parseInt(val, 10)
