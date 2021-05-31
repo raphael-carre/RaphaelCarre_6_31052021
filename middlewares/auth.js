@@ -5,7 +5,7 @@ export default (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         const userId = Security.decodeJwt(token)
 
-        if (!req.body.userId || req.body.userId !== userId) throw 'Identifiant utilisateur invalide !'
+        if (req.body.userId && req.body.userId !== userId) throw 'Identifiant utilisateur invalide !'
         else next()
     }
     catch (error) {

@@ -19,12 +19,14 @@ app.use((req, res, next) => {
 })
 
 app.use(express.json())
+
+app.use('/images', express.static('./images'))
 app.use(helmet())
 
-app.use(logger)
+// app.use(logger)
 
 app.use('/api/auth', userRoute)
-app.use('/api/sauce', sauceRoute)
+app.use('/api/sauces', sauceRoute)
 
 
 app.get('/', (req, res) => {
