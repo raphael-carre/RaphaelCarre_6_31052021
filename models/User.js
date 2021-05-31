@@ -6,6 +6,6 @@ const userSchema = mongoose.Schema({
     password:   { type: String, required: true }
 })
 
-userSchema.plugin(uniqueValidator)
+userSchema.plugin(uniqueValidator, { message: 'Cet e-mail a déjà été enregistré !' })
 
 export default mongoose.model('User', userSchema)
