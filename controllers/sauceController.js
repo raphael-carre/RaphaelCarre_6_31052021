@@ -89,12 +89,51 @@ class SauceController {
     }
 
     /**
-     * Add/Remove "Likes"/"Dislikes" to one sauce object in the database
+     * Adds/Removes userId in "usersLiked"/"usersDisliked" to one sauce object in the database,
+     * calculates the number of "likes" and "dislikes" and join the results to the object
      * @param {Request} req Request
      * @param {Response} res Response
      */
     static like(req, res) {
-        
+        const userId = req.body.userId
+
+        Sauce.findOne({ _id: req.params.id })
+            .then(sauce => {
+                const values = {
+                    usersLiked: sauce.usersLiked,
+                    usersDisliked: sauce.usersDisliked,
+                    like: 0,
+                    dislikes: 0
+                }
+
+                let message
+
+                switch (parseInt(req.body.like)) {
+                    case 1:
+                        values.usersLiked = [...sauce.usersLiked, userId]
+                        message = 'Vous aimez cette sauce !'
+                        break
+                    case 0:
+                        values.usersLiked = sauce.usersLiked.filter(id => id !== userId)
+                        values.usersDisliked = sauce.usersDisliked.filter(id => id !== userId)
+                        message = 'Vous n\'avez pas d\'avis concernant cette sauce...'
+                        break
+                    case -1:
+                        values.usersDisliked = [...sauce.usersDisliked, userId]
+                        message = 'Vous n\'aimez pas cette sauce...'
+                        break
+                    default:
+                        message = ''
+                }
+
+                values.likes = values.usersLiked.length
+                values.dislikes = values.usersDisliked.length
+
+                Sauce.updateOne({ _id: req.params.id }, values)
+                    .then(() => res.status(200).json({ message }))
+                    .catch(error => res.status(500).json({ error }))
+            })
+            .catch(error => res.status(404).json({ error }))
     }
 }
 
