@@ -1,4 +1,4 @@
-import Security from '../classes/Security.js'
+import Security from '../config/Security.js'
 import User from '../models/User.js'
 
 /**

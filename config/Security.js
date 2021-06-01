@@ -50,8 +50,19 @@ class Security {
      * @returns {{String, String}} { key, iv }
      */
     static generateAesKeys() {
-        const key = cryptoJs.enc.Hex.parse(process.env.AES_KEY)
-        const iv = cryptoJs.enc.Hex.parse(process.env.AES_IV)
+        const aesString = process.env.AES_BASE_STRING
+        let aesKey = ''
+        let aesIv = ''
+        let i = 0
+
+        while (aesKey.length < 32 && aesIv.length < 32) {
+            aesKey += i % 2 === 0 ? `${aesString.charAt(i + 2) !== '' ? aesString.charAt(i + 2) : (3 * i)}` : i
+            aesIv += i % 2 === 0 ? `${aesString.charAt(i + 3) !== '' ? aesString.charAt(i + 3) : (2 * i)}` : 1+i
+            i++
+        }
+
+        const key = cryptoJs.enc.Hex.parse(aesKey)
+        const iv = cryptoJs.enc.Hex.parse(aesIv)
         return { key, iv }
     }
     

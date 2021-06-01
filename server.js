@@ -7,7 +7,7 @@ const normalizePort = val => {
     return port >= 0 ? port : false
 }
 
-const port = normalizePort(process.env.SERVER_PORT || '3000')
+const port = normalizePort(process.env.PORT || '3000')
 
 const server = http.createServer(app)
 

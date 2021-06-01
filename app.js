@@ -2,13 +2,13 @@ import express from 'express'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import logger from './middlewares/logger.js'
-import mongoDb from './database/Database.js'
+import mongoDb from './config/Database.js'
 import userRoute from './routes/userRoute.js'
 import sauceRoute from './routes/sauceRoute.js'
 
 const app = express()
 
-dotenv.config({ path: './config/.env' })
+dotenv.config({ path: './.env' })
 mongoDb.connection()
 
 app.use((req, res, next) => {
@@ -30,6 +30,7 @@ app.use('/api/sauces', sauceRoute)
 
 
 app.get('/', (req, res) => {
+    res.status(200)
     res.write('Homepage')
     res.end()
 })
