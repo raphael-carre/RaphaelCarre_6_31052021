@@ -8,6 +8,12 @@ import userRoute from './routes/userRoute.js'
 import sauceRoute from './routes/sauceRoute.js'
 
 const app = express()
+const jsDocHelmetOptions = {
+    useDefaults: true,
+    directives: {
+        scriptSrc: ["'self'", "'unsafe-inline'"]
+    }
+}
 
 dotenv.config({ path: './.env' })
 mongoDb.connection()
@@ -24,7 +30,9 @@ app.use(express.json())
 app.use(helmet())
 
 app.use('/images', express.static('./images'))
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
+app.use('/jsdoc', helmet.contentSecurityPolicy(jsDocHelmetOptions), express.static('./docs/jsdoc'))
 
 // app.use(logger)
 

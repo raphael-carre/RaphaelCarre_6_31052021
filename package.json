@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "doc": "jsdoc -c .jsdoc.config.json -r -d ./docs/jsdoc/"
   },
   "author": "",
   "license": "ISC",
@@ -19,9 +20,12 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.12",
     "mongoose-unique-validator": "^2.0.3",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
+    "jsdoc": "^3.6.7",
     "nodemon": "^2.0.7"
   }
 }

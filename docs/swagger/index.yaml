@@ -4,9 +4,9 @@ definition:
     title: "So Pekocko"
     version: 1.0
   basePath: /
-  # externalDocs: 
-  #   url: "/jsdoc"
-  #   description: "API documentation"
+  externalDocs: 
+    url: "/jsdoc"
+    description: "API code documentation"
   
 
   servers: 

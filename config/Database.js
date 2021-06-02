@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 /**
  * Database class
  */
-export default class Database {
+class Database {
     /**
      * @property {String} userName User name
      * @property {String} password User password
@@ -28,3 +28,5 @@ export default class Database {
             .catch(() => console.log('Connexion à MongoDB échouée !'));
     }
 }
+
+export default Database

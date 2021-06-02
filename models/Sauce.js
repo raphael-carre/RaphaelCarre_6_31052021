@@ -1,5 +1,22 @@
+/**
+ * @module Models/Sauce
+ */
 import mongoose from 'mongoose'
 
+/**
+ * @type {Object}
+ * @property {String} userId
+ * @property {String} name
+ * @property {String} manufacturer
+ * @property {String} description
+ * @property {String} mainPepper
+ * @property {String} imageUrl
+ * @property {Number} heat
+ * @property {Number} likes
+ * @property {Number} dislikes
+ * @property {Array} usersLiked
+ * @property {Array} usersDisliked
+ */
 const sauceSchema = mongoose.Schema({
     userId:         { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     name:           { type: String, required: true },
