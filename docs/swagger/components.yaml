@@ -1,0 +1,95 @@
+components:
+  securitySchemes:
+    Auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    Sauce:
+      type: object
+      required:
+        - name
+        - manufacturer
+        - description
+        - mainPepper
+        - imageUrl
+        - heat
+        - userId
+      properties:
+        name:
+          type: string
+        manufacturer:
+          type: string
+        description:
+          type: string
+        mainPepper:
+          type: string
+        imageUrl:
+          type: string
+        heat:
+          type: number
+        userId:
+          type: string
+        likes:
+          type: number
+        dislikes:
+          type: number
+        userLiked:
+          type: array
+          items:
+            type: string
+        userDisliked:
+          type: array
+          items:
+            type: string
+
+  requestBodies:
+    User:
+      required: true
+      description: User informations
+      content:
+        application/json:
+          schema:
+            $ref: '#components/schemas/User'
+
+    SauceBodyWithImage:
+      required: true
+      description: Sauce content with image
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - sauce
+              - image
+            properties:
+              sauce:
+                $ref: '#components/schemas/Sauce'
+              image:
+                type: file
+                format: binary
+          encoding:
+            sauce:
+              contentType: application/json
+            image:
+              contentType: image/*
+
+    SauceBody:
+      required: true
+      description: Sauce content
+      content:
+        application/json:
+          schema:
+            $ref: '#components/schemas/Sauce'

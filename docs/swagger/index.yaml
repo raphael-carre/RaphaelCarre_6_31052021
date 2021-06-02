@@ -1,0 +1,24 @@
+definition:
+  openapi: 3.0.0
+  info:
+    title: "So Pekocko"
+    version: 1.0
+  basePath: /
+  # externalDocs: 
+  #   url: "/jsdoc"
+  #   description: "API documentation"
+  
+
+  servers: 
+  - url: "http://localhost:3000"
+    description: "Development server"
+  - url: "https://p6-sopekocko.herokuapp.com/"
+    description: "Production server"
+
+  paths:
+    $ref: './paths.yaml'
+                
+components:
+  $ref: './components.yaml'
+
+apis: ["./**/*.yaml"]

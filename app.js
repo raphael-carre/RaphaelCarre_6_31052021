@@ -2,6 +2,7 @@ import express from 'express'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
 import logger from './middlewares/logger.js'
+import { swaggerUi, swaggerConfig } from './middlewares/swagger.js'
 import mongoDb from './config/Database.js'
 import userRoute from './routes/userRoute.js'
 import sauceRoute from './routes/sauceRoute.js'
@@ -20,8 +21,10 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 
-app.use('/images', express.static('./images'))
 app.use(helmet())
+
+app.use('/images', express.static('./images'))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
 
 // app.use(logger)
 
@@ -30,9 +33,7 @@ app.use('/api/sauces', sauceRoute)
 
 
 app.get('/', (req, res) => {
-    res.status(200)
-    res.write('Homepage')
-    res.end()
+    res.status(301).redirect('/api-docs')
 })
 
 export default app

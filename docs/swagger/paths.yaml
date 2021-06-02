@@ -1,0 +1,219 @@
+/api/auth/signup:
+  post:
+    tags: ['Users']
+    description: Creates a new user
+    summary: Creates a new user
+    requestBody:
+      $ref: '#components/requestBodies/User'
+    responses:
+      201:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  example: Compte utilisateur créé !
+      400:
+        content:
+          application/json:
+            schema:
+              type: object
+
+/api/auth/login:
+  post:
+    tags: ['Users']
+    description: User login
+    summary: User login
+    requestBody:
+      $ref: '#components/requestBodies/User'
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                token:
+                  type: string
+      401:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  example: Utilisateur inconnu !
+
+/api/sauces:
+  get:
+    tags: ['Sauces']
+    description: Returns all recorded sauces
+    summary: Returns all recorded sauces
+    security:
+      - Auth: []
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Sauce'
+  post:
+    tags: ['Sauces']
+    description: Adds a new sauce
+    summary: Adds a new sauce
+    security:
+      - Auth: []
+    requestBody:
+      $ref: '#components/requestBodies/SauceBodyWithImage'
+    responses:
+      201:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  example: Nouvelle sauce enregistrée !
+
+/api/sauces/{id}:
+  get:
+    tags: ['Sauces']
+    description: Returns one recorded sauce
+    summary: Returns one recorded sauce
+    security:
+      - Auth: []
+    parameters:
+      - name: id
+        in: path
+        description: Sauce id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Sauce'
+      404:
+        content:
+          application/json:
+            type: object
+            properties:
+              message:
+                type: string
+  put:
+    tags: ['Sauces']
+    description: Modifies a sauce
+    summary: Modifies a sauce
+    security:
+      - Auth: []
+    parameters:
+      - name: id
+        in: path
+        description: Sauce id
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      description: Sauce with optional content
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              sauce:
+                type: object
+                required:
+                  - name
+                  - manufacturer
+                  - description
+                  - mainPepper
+                  - imageUrl
+                  - heat
+                  - userId
+                properties:
+                  name:
+                    type: string
+                  manufacturer:
+                    type: string
+                  description:
+                    type: string
+                  mainPepper:
+                    type: string
+                  imageUrl:
+                    type: string
+                  heat:
+                    type: number
+                  userId:
+                    type: string
+              image:
+                type: file
+                format: binary
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - manufacturer
+              - description
+              - mainPepper
+              - imageUrl
+              - heat
+              - userId
+            properties:
+              name:
+                type: string
+              manufacturer:
+                type: string
+              description:
+                type: string
+              mainPepper:
+                type: string
+              imageUrl:
+                type: string
+              heat:
+                type: number
+              userId:
+                type: string
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: Sauce modifiée !
+      400:
+        content:
+          application/json:
+            schema:
+              type: object
+  delete:
+    tags: ['Sauces']
+    description: Deletes a sauce from the database
+    summary: Deletes a sauce from the database
+    security:
+      - Auth: []
+    parameters:
+      - name: id
+        in: path
+        description: Sauce id
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: Sauce supprimée !
+      400:
+        content:
+          application/json:
+            schema:
+              type: object
