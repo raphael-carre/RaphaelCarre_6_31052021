@@ -34,6 +34,7 @@ class SauceController {
      */
     static create(req, res) {
         const sauceObject = JSON.parse(req.body.sauce)
+
         const sauce = new Sauce({
             ...sauceObject,
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
