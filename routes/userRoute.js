@@ -2,8 +2,8 @@
  * @module Routes/User
  */
 import express from 'express'
-import UserCtrl from '../controllers/UserController.js'
 import validation from '../middlewares/validation.js'
+import UserCtrl from '../controllers/UserController.js'
 
 const router = express.Router()
 

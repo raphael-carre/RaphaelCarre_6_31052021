@@ -4,8 +4,8 @@
 import express from 'express'
 import auth from '../middlewares/auth.js'
 import multer from '../middlewares/multer-config.js'
-import SauceCtrl from '../controllers/SauceController.js'
 import validation from '../middlewares/validation.js'
+import SauceCtrl from '../controllers/SauceController.js'
 
 const router = express.Router()
 
@@ -35,7 +35,12 @@ router.get('/:id', auth, SauceCtrl.getOne)
  * @param {Callback} middleware2
  * @param {Callback} method Controller method
  */
-router.post('/', auth, multer, validation, SauceCtrl.create)
+router.post('/', auth, (req, res, next) => { 
+    multer(req, res, error => {
+        if (error) return res.status(400).json({ message: error.message })
+        next()
+    })
+}, validation, SauceCtrl.create)
 
 /**
  * @name put/sauce
@@ -45,7 +50,12 @@ router.post('/', auth, multer, validation, SauceCtrl.create)
  * @param {Callback} middleware2
  * @param {Callback} method Controller method
  */
-router.put('/:id', auth, multer, validation, SauceCtrl.update)
+router.put('/:id', auth, (req, res, next) => {
+    multer(req, res, error => {
+        if (error) return res.status(400).json({ message: error.message })
+        next()
+    })
+}, validation, SauceCtrl.update)
 
 /**
  * @name delete/sauce

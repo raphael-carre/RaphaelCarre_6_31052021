@@ -1,4 +1,5 @@
 import multer from 'multer'
+import Validator from '../config/Validator.js'
 
 const MIME_TYPES = {
     'image/jpg': 'jpg',
@@ -17,4 +18,15 @@ const storage = multer.diskStorage({
     }
 })
 
-export default multer({ storage }).single('image')
+const fileFilter = (req, file, callback) => {
+    const validator = new Validator()
+    try {
+        validator.test(JSON.parse(req.body.sauce))
+        callback(null, true)
+    }
+    catch (error) {
+        callback(error, false)
+    }
+}
+
+export default multer({ storage, fileFilter }).single('image')
