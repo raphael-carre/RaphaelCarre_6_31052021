@@ -1,5 +1,6 @@
 import fs from 'fs'
 import Sauce from '../models/Sauce.js'
+import Security from '../config/Security.js'
 
 /**
  * Sauce Controller
@@ -50,13 +51,18 @@ class SauceController {
      * @param {Response} res Response
      */
     static update(req, res) {
+        const token = req.headers.authorization.split(' ')[1]
+        const userId = Security.decodeJwt(token)
+
         if (req.file) {
             Sauce.findOne({ _id: req.params.id })
                 .then(sauce => {
+                    if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
+
                     const filename = sauce.imageUrl.split('/images/')[1]
                     fs.unlink(`images/${filename}`, () => {})
                 })
-                .catch(error => console.log(error))
+                .catch(error => res.status(401).json({ error: error.message }))
         }
 
         const sauceObject = req.file ?
@@ -66,8 +72,11 @@ class SauceController {
             } : { ...req.body }
 
         Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-            .catch(error => res.status(400).json({ error }))
+            .then(sauce => {
+                if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
+                res.status(200).json({ message: 'Sauce modifiée !' })
+            })
+            .catch(error => res.status(401).json({ error }))
 
     }
 
@@ -77,8 +86,13 @@ class SauceController {
      * @param {Response} res Response
      */
     static delete(req, res) {
+        const token = req.headers.authorization.split(' ')[1]
+        const userId = JSON.stringify(Security.decodeJwt(token))
+
         Sauce.findOne({ _id: req.params.id })
             .then(sauce => {
+                if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
+
                 const filename = sauce.imageUrl.split('/images/')[1]
                 fs.unlink(`images/${filename}`, () => {
                     Sauce.deleteOne({ _id: req.params.id })
@@ -86,7 +100,7 @@ class SauceController {
                         .catch(error => res.status(400).json({ error }))
                 })
             })
-            .catch(error => res.status(500).json({ error }))
+            .catch(error => res.status(401).json({ error: error.message }))
     }
 
     /**
