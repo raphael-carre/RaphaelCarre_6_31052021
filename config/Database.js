@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import logger from './Winston.js'
 
 /**
  * Database class
@@ -24,8 +25,8 @@ class Database {
             `mongodb+srv://${db.userName}:${db.password}@sopekocko.9y2ww.mongodb.net/${db.dbName}?retryWrites=true&w=majority`,
             { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
         )
-            .then(() => console.log('Connexion à MongoDB réussie !'))
-            .catch(() => console.log('Connexion à MongoDB échouée !'));
+            .then(() => logger.info('Connection to MongoDB succeded !'))
+            .catch(() => console.error('Connection to MongoDB failed !'));
     }
 }
 
