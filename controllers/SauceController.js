@@ -52,32 +52,28 @@ class SauceController {
      */
     static update(req, res) {
         const token = req.headers.authorization.split(' ')[1]
-        const userId = Security.decodeJwt(token)
+        const userId = JSON.stringify(Security.decodeJwt(token))
 
-        if (req.file) {
-            Sauce.findOne({ _id: req.params.id })
-                .then(sauce => {
-                    if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
-
+        Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
+            
+            if (req.file) {
                     const filename = sauce.imageUrl.split('/images/')[1]
                     fs.unlink(`images/${filename}`, () => {})
-                })
-                .catch(error => res.status(401).json({ error: error.message }))
-        }
+            }
 
-        const sauceObject = req.file ?
-            {
-                ...JSON.parse(req.body.sauce),
-                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-            } : { ...req.body }
-
-        Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-            .then(sauce => {
-                if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
-                res.status(200).json({ message: 'Sauce modifiée !' })
-            })
-            .catch(error => res.status(401).json({ error }))
-
+            const sauceObject = req.file ?
+                {
+                    ...JSON.parse(req.body.sauce),
+                    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                } : { ...req.body }
+    
+            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+                .then(() =>  res.status(200).json({ message: 'Sauce modifiée !' }))
+                .catch(error => res.status(400).json({ error }))
+        })
+        .catch(error => res.status(401).json({ error: error.message }))
     }
 
     /**
