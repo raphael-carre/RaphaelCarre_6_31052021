@@ -67,7 +67,14 @@ class Validator {
      * @return {Object} Returns sanitized object
      */
     sanitize(inputs) {
-        
+        let sanitizedInputs = {}
+
+        for (let key in inputs) {
+            if (typeof inputs[key] === 'string') {
+                sanitizedInputs[key] = inputs[key].trim()
+            }
+        }
+        return sanitizedInputs
     }
 }
 

@@ -15,6 +15,14 @@ const validation = (req, res, next) => {
 
     try { 
         validator.test(datas)
+
+        if (req.file) {
+            for (let key in body) {
+                typeof body[key] === 'string' && (req.body[key] = JSON.stringify(validator.sanitize(datas)))
+            }
+        } else {
+            req.body = validator.sanitize(datas)
+        }
         next()
     }
     catch (error) { return res.status(400).json({ message: error.message })}
