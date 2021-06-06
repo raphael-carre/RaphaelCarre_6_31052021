@@ -10,8 +10,8 @@ import uniqueValidator from 'mongoose-unique-validator'
  * @property {String} password User password
  */
 const userSchema = mongoose.Schema({
-    email:      { type: String, required: true, unique: true },
-    password:   { type: String, required: true }
+    email:      { type: String, required: [true, 'Vous devez indiquer une adresse e-mail'], unique: true },
+    password:   { type: String, required: [true, 'Vous devez indiquer un mot de passe'] }
 })
 
 userSchema.plugin(uniqueValidator, { message: 'Cet e-mail a déjà été enregistré !' })
