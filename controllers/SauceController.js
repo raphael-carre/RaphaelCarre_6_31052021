@@ -11,8 +11,8 @@ class SauceController {
      * @param {Request} req Request
      * @param {Response} res Response
      */
-    static getAll(req, res) {
-        Sauce.find()
+    static async getAll(req, res) {
+        await Sauce.find()
             .then(sauces => res.status(200).json(sauces))
             .catch(error => res.status(404).json({ error }))
     }
@@ -22,8 +22,8 @@ class SauceController {
      * @param {Request} req Request
      * @param {Response} res Response
      */
-    static getOne(req, res) {
-        Sauce.findOne({ _id: req.params.id })
+    static async getOne(req, res) {
+        await Sauce.findOne({ _id: req.params.id })
             .then(sauce => res.status(200).json(sauce))
             .catch(error => res.status(404).json({ error }))
     }
@@ -33,14 +33,14 @@ class SauceController {
      * @param {Request} req Request
      * @param {Response} res Response
      */
-    static create(req, res) {
+    static async create(req, res) {
         const sauceObject = JSON.parse(req.body.sauce)
 
         const sauce = new Sauce({
             ...sauceObject,
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         })
-        sauce.save()
+        await sauce.save()
             .then(() => res.status(201).json({ message: 'Nouvelle sauce enregistrée !' }))
             .catch(error => res.status(400).json({ error }))
     }
@@ -50,26 +50,29 @@ class SauceController {
      * @param {Request} req Request
      * @param {Response} res Response
      */
-    static update(req, res) {
+    static async update(req, res) {
         const token = req.headers.authorization.split(' ')[1]
         const userId = JSON.stringify(Security.decodeJwt(token))
 
-        Sauce.findOne({ _id: req.params.id })
-        .then(sauce => {
+        await Sauce.findOne({ _id: req.params.id })
+        .then(async sauce => {
             if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
             
-            if (req.file) {
-                    const filename = sauce.imageUrl.split('/images/')[1]
-                    fs.unlink(`images/${filename}`, () => {})
-            }
+            let sauceObject
 
-            const sauceObject = req.file ?
-                {
+            if (req.file) {
+                const filename = sauce.imageUrl.split('/images/')[1]
+                fs.unlink(`images/${filename}`, () => {})
+
+                sauceObject = {
                     ...JSON.parse(req.body.sauce),
                     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                } : { ...req.body }
+                }
+            } else {
+                sauceObject = { ...req.body }
+            }
     
-            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+            await Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
                 .then(() =>  res.status(200).json({ message: 'Sauce modifiée !' }))
                 .catch(error => res.status(400).json({ error }))
         })
@@ -81,17 +84,17 @@ class SauceController {
      * @param {Request} req Request
      * @param {Response} res Response
      */
-    static delete(req, res) {
+    static async delete(req, res) {
         const token = req.headers.authorization.split(' ')[1]
         const userId = JSON.stringify(Security.decodeJwt(token))
 
-        Sauce.findOne({ _id: req.params.id })
+        await Sauce.findOne({ _id: req.params.id })
             .then(sauce => {
                 if (JSON.stringify(sauce.userId) !== userId) throw new Error('Vous n\'avez pas l\'autorisation d\'effectuer cette action !')
 
                 const filename = sauce.imageUrl.split('/images/')[1]
-                fs.unlink(`images/${filename}`, () => {
-                    Sauce.deleteOne({ _id: req.params.id })
+                fs.unlink(`images/${filename}`, async () => {
+                    await Sauce.deleteOne({ _id: req.params.id })
                         .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
                         .catch(error => res.status(400).json({ error }))
                 })
@@ -105,11 +108,11 @@ class SauceController {
      * @param {Request} req Request
      * @param {Response} res Response
      */
-    static like(req, res) {
+    static async like(req, res) {
         const userId = req.body.userId
 
-        Sauce.findOne({ _id: req.params.id })
-            .then(sauce => {
+        await Sauce.findOne({ _id: req.params.id })
+            .then(async sauce => {
                 const values = {
                     usersLiked: sauce.usersLiked,
                     usersDisliked: sauce.usersDisliked,
@@ -140,7 +143,7 @@ class SauceController {
                 values.likes = values.usersLiked.length
                 values.dislikes = values.usersDisliked.length
 
-                Sauce.updateOne({ _id: req.params.id }, values)
+                await Sauce.updateOne({ _id: req.params.id }, values)
                     .then(() => res.status(200).json({ message }))
                     .catch(error => res.status(500).json({ error }))
             })
