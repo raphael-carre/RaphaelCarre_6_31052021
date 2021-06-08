@@ -70,9 +70,7 @@ class Validator {
         let sanitizedInputs = {}
 
         for (let key in inputs) {
-            if (typeof inputs[key] === 'string') {
-                sanitizedInputs[key] = inputs[key].trim()
-            }
+                sanitizedInputs[key] = typeof inputs[key] === 'string' ? inputs[key].trim() : inputs[key]
         }
         return sanitizedInputs
     }
