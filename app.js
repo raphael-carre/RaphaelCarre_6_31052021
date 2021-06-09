@@ -32,14 +32,22 @@ app.use(loggerMiddleware)
 
 app.use('/images', express.static('./images'))
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
-app.use('/jsdoc', helmet.contentSecurityPolicy(jsDocHelmetOptions), express.static('./docs/jsdoc'))
 
 app.use('/api/auth', userRoute)
 app.use('/api/sauces', sauceRoute)
 
-app.get('/', (req, res) => {
-    res.status(301).redirect('/api-docs')
-})
+if (process.env.NODE_ENV === 'development') {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
+    app.use('/jsdoc', helmet.contentSecurityPolicy(jsDocHelmetOptions), express.static('./docs/jsdoc'))
+
+    app.get('/', (req, res) => {
+        res.status(301).redirect('/api-docs')
+    })
+} else {
+    app.get('/', (req, res) => {
+        res.status(200)
+        res.end()
+    })
+}
 
 export default app

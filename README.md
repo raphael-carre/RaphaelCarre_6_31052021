@@ -46,7 +46,7 @@ Une fois le front-end lancé, vous pouvez tester l'application depuis l'adresse 
 
 Informations complémentaires
 ----------------------------
-Vous pouvez tester directement l'API avec Postman ou l'extension Thunder Client de VSCode en utilisant l'adresse http://localhost:3000/.  
+Vous pouvez tester directement l'API avec Postman ou l'extension Thunder Client de VSCode en utilisant les endpoints indiqués dans le document [Guidelines API](docs/Guidelines+API.pdf) sur l'adresse http://localhost:3000/.  
 
-Vous pouvez également consulter la documentation de l'API en vous rendant à la même adresse depuis votre navigateur. (Ne fonctionne pas avec Safari)
+En lançant le back-end en mode developpement avec la commande `npm run dev`, vous pouvez également consulter la documentation de l'API en vous rendant à cette même adresse depuis votre navigateur. (Ne fonctionne pas avec Safari)
 
