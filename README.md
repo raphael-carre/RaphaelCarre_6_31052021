@@ -16,7 +16,7 @@ Installation du back-end
 ------------------------
 Créez un nouveau dossier, puis depuis celui-ci, clonez ce dépôt en collant cette commande dans votre terminal :
     
-    git clone https://github.com/raphael-carre/RaphaelCarre_5_05052021.git ./ && npm install
+    git clone https://github.com/raphael-carre/RaphaelCarre_6_31052021 ./ && npm install
 
 Après l'installation, vous devez créer un fichier comportant des variables d'environnement à la racine du dossier :
 
