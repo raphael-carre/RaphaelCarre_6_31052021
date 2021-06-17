@@ -8,11 +8,18 @@ export default (req, res, next) => {
     }
     
     let originalSend = res.send
+    let counter = 0
     res.send = function (data) {
-        if (res.statusCode >= 400) {
+        if (res.statusCode >= 400 && counter === 0) {
             logger.info(requestInfo)
-            logger.error(`Response: ${res.statusCode}\n  Content: ${data}`)
+            if (typeof data === 'string') {
+                const parsedData = JSON.parse(data)
+                logger.error(`${res.statusCode}\n${parsedData.error}`)
+            } else {
+                logger.error(`${res.statusCode}\n`, data)
+            }
         }
+        counter++ 
         originalSend.apply(res, arguments)
     }
     next()

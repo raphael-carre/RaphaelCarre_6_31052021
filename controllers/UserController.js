@@ -19,7 +19,7 @@ class UserController {
 
                 await user.save()
                     .then(() => res.status(201).json({ message: 'Compte utilisateur créé !' }))
-                    .catch(error => res.status(400).json(error))
+                    .catch(error => res.status(400).json({ error }))
             })
             .catch(error => res.status(500).json({ error }))
     }

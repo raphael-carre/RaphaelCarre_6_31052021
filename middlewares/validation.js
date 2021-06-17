@@ -25,7 +25,7 @@ const validation = (req, res, next) => {
         }
         next()
     }
-    catch (error) { return res.status(400).json({ message: error.message })}
+    catch (error) { return res.status(400).json({ error: error.message }) }
 }
 
 export default validation

@@ -83,7 +83,7 @@ class SauceController {
             res.status(200).json({ message: 'Sauce modifiée !' })
         }
         catch (error) {
-            res.status(error.statusCode).json({ error: error.message })
+            res.status(error.statusCode).send(error)
         }
     }
 
@@ -112,7 +112,7 @@ class SauceController {
             res.status(200).json({ message: 'Sauce supprimée !' })
         }
         catch (error) {
-            res.status(error.statusCode).json({ error: error.message })
+            res.status(error.statusCode).send(error)
         }
     }
 
@@ -166,7 +166,7 @@ class SauceController {
             res.status(200).json({ message })
         }
         catch (error) {
-            res.status(error.statusCode).json({ error: error.message })
+            res.status(error.statusCode).send(error)
         }
     }
 }

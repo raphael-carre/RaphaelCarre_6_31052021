@@ -4,7 +4,9 @@ const { createLogger, format, transports } = winston
 const { combine, timestamp, printf, colorize, errors, json } = format
 
 const myFormat = printf(({ level, message, timestamp, stack }) => {
-    return `${timestamp} ${level}: ${stack || message}`
+    let content = `${timestamp} ${level}: ${message}`
+    stack && (content += `\n${stack.split('\n').slice(1).join('\n')}`)
+    return content
 })
 
 const consoleFormat = combine(

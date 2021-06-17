@@ -9,6 +9,8 @@ class FetchErrorHandler extends Error {
     constructor(statusCode = 500, errorMessage = null) {
         super()
 
+        if (Error.captureStackTrace) { Error.captureStackTrace(this, FetchErrorHandler)}
+
         this.statusCode = statusCode || 400
         this.message = errorMessage || this.message(statusCode)
     }
